@@ -1,0 +1,14 @@
+{
+  "name": "norm-gif",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ws"
+  },
+  "author": "alexg@inthegame.io",
+  "license": "ISC",
+  "dependencies": {
+    "local-web-server": "^5.3.0"
+  }
+}
