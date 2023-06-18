@@ -1,0 +1,1 @@
+# gif-normalizer-gifsicle
