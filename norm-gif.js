@@ -14,12 +14,17 @@ function InitNormGif() {
       const file = e.target.files[0];
       const reader = new FileReader();
 
-      reader.onload = function () {
+      reader.onload = async () => {
         __image = new Image();
         __image.src = reader.result;
         document.body.appendChild(__image);
 
-        transformGif(file);
+        const outFile = await transformGif(file);
+
+        const out = document.querySelector('#out');
+        out.innerHTML = '';
+        __url = URL.createObjectURL(outFile);
+        out.insertAdjacentHTML('beforeend', `<br/><br/><span><img src="${__url}"></span>`);
       };
 
       reader.readAsDataURL(file);
@@ -28,27 +33,21 @@ function InitNormGif() {
     input.click();
   }
 
-  function transformGif(file) {
-    gifsicle
-      .run({
-        input: [
-          {
-            file,
-            name: 'input.gif',
-          },
-        ],
-        command: [ // -e -U
-          `-O2 --use-colormap web --color-method blend-diversity --dither
+  async function transformGif(file) {
+    const outfiles = await gifsicle.run({
+      input: [
+        {
+          file,
+          name: 'input.gif',
+        },
+      ],
+      command: [
+        `-O2 --use-colormap web --color-method blend-diversity --dither
           input.gif -o /out/frame.gif`,
-        ],
-      })
-      .then(async (outfiles) => {
-        const out = document.querySelector('#out');
-        out.innerHTML = '';
+      ],
+    });
 
-        __url = URL.createObjectURL(outfiles[0]);
-        out.insertAdjacentHTML('beforeend', `<br/><br/><span><img src="${__url}"></span>`);
-      });
+    return outfiles[0];
   }
 
   function saveGifFile() {
